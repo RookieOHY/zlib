@@ -53,12 +53,6 @@ Or download a binary from [Releases](https://github.com/RookieOHY/zlib/releases/
 and put it on your `PATH`. See [Installation](docs/installation.md) for Go
 installation, source builds, and upgrades.
 
-Windows (PowerShell, installs to `%USERPROFILE%\bin` and adds it to your user `PATH`):
-
-```powershell
-irm https://raw.githubusercontent.com/RookieOHY/zlib/main/install.ps1 | iex
-```
-
 ## Quick start
 
 You need a Z-Library account. First, find a domain reachable from your network:
