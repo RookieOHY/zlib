@@ -31,6 +31,7 @@ English | [简体中文](README.zh.md)
 📥 **Download** — view book details and choose a download directory\
 📖 **Send to Kindle** — deliver files to your [Kindle address](docs/kindle.md)\
 🌏 **Send to WeRead** — import books into your [WeRead](docs/weread.md) shelf\
+📱 **Send to Boox** — deliver files to a Boox e-reader over the local network via BooxDrop\
 🕒 **Profile** — check your daily download quota\
 🎨 **Themes** — switch color themes with `/theme`\
 🌐 **Network** — find working mirrors with `zlib doctor`, trust [your own mirror](docs/configuration.md#your-own-mirrors), or use a proxy\
@@ -122,6 +123,7 @@ zlib search "dune" --ext epub --json --count 10
 | Check account and quota          | `zlib profile`                 |
 | Send to [Kindle](docs/kindle.md) | `zlib kindle send ./book.epub` |
 | Send to [WeRead](docs/weread.md) | `zlib weread import ./book.epub` |
+| Send to Boox (BooxDrop) | `zlib boox send ./book.epub` |
 
 To download, replace `id:hash` with a book's complete `id` from
 the results:

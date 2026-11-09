@@ -31,6 +31,7 @@ Z-Library 命令行工具，你和 AI Agent 都能用。
 📥 **下载** — 查看书籍详情，选择下载目录\
 📖 **发送到 Kindle** — 把文件投递到你的 [Kindle 邮箱](docs/kindle.md)\
 🌏 **导入微信读书** — 把书导入你的[微信读书](docs/weread.md)书架\
+📱 **发送到文石** — 通过 BooxDrop 把文件推送到局域网内的文石阅读器\
 🕒 **用量查看** — 查看每日下载配额\
 🎨 **主题** — 用 `/theme` 切换配色\
 🌐 **网络** — 用 `zlib doctor` 找到可用镜像，可[添加自己信任的镜像](docs/configuration.md#your-own-mirrors)，也支持代理\
@@ -119,6 +120,7 @@ zlib search "dune" --ext epub --json --count 10
 | 查看账号与配额                  | `zlib profile`                 |
 | 发送到 [Kindle](docs/kindle.md) | `zlib kindle send ./book.epub` |
 | 导入[微信读书](docs/weread.md)  | `zlib weread import ./book.epub` |
+| 发送到文石（BooxDrop）  | `zlib boox send ./book.epub` |
 
 下载时，将 `id:hash` 替换为结果中书籍的完整 `id`：
 
