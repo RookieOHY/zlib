@@ -51,6 +51,12 @@ curl -fsSL https://raw.githubusercontent.com/RookieOHY/zlib/main/install.sh | sh
 也可以从 [Releases](https://github.com/RookieOHY/zlib/releases/latest) 下载二进制后放到 `PATH`。
 基于源码编译、升级等更多方式见 [Installation](docs/installation.md)。
 
+Windows（PowerShell 一键安装，装到 `%USERPROFILE%\bin` 并自动加入用户 `PATH`）：
+
+```powershell
+irm https://raw.githubusercontent.com/RookieOHY/zlib/main/install.ps1 | iex
+```
+
 ## 快速开始
 
 使用前需要一个 Z-Library 账号。先检测当前网络可用的域名：
