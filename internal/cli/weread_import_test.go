@@ -157,7 +157,8 @@ func TestShellDownloadWeReadRejectsOversizedFileOnCompletion(t *testing.T) {
 	download.bookName = "Book"
 	m.open("download", download)
 
-	m, _ = shellStep(m, key("left"))
+	m, _ = shellStep(m, key("left")) // wraps from Back to Boox
+	m, _ = shellStep(m, key("left")) // another step lands on WeRead
 	m, cmd := shellStep(m, key("enter"))
 	m, _ = shellStep(m, cmd())
 	if m.kind != "download" {

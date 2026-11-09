@@ -213,6 +213,7 @@ func init() {
 	rootCmd.AddCommand(profileCmd)
 	rootCmd.AddCommand(doctorCmd)
 	rootCmd.AddCommand(kindleCmd)
+	rootCmd.AddCommand(booxCmd)
 	rootCmd.AddCommand(themeCmd)
 	rootCmd.AddCommand(tuiCmd)
 	rootCmd.AddCommand(versionCmd)

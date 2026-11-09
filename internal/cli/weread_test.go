@@ -48,10 +48,10 @@ func writeTempFile(t *testing.T, name string) string {
 
 func TestDownloadCompleteOffersDeliveriesByFormat(t *testing.T) {
 	tests := map[string][]string{
-		"book.epub": {actionBack, actionSendToKindle, actionSendToWeRead},
-		"book.mobi": {actionBack, actionSendToWeRead},
-		"book.docx": {actionBack, actionSendToKindle},
-		"book.fb2":  {actionBack},
+		"book.epub": {actionBack, actionSendToKindle, actionSendToWeRead, actionSendToBoox},
+		"book.mobi": {actionBack, actionSendToWeRead, actionSendToBoox},
+		"book.docx": {actionBack, actionSendToKindle, actionSendToBoox},
+		"book.fb2":  {actionBack, actionSendToBoox},
 	}
 	for name, want := range tests {
 		m := newDownloadModel("1:abc", "", nil)
@@ -63,12 +63,14 @@ func TestDownloadCompleteOffersDeliveriesByFormat(t *testing.T) {
 
 	m := newDownloadModel("1:abc", "", nil)
 	m.state, m.stayOnComplete, m.savedPath = stateComplete, true, "book.epub"
-	next, _ := m.Update(key("left")) // wraps from Back to the last action
+	next, _ := m.Update(key("left")) // wraps from Back to Boox, the last action
+	m = next.(downloadModel)
+	next, _ = m.Update(key("left")) // another step back lands on WeRead
 	m = next.(downloadModel)
 	next, cmd := m.Update(key("enter"))
 	got := next.(downloadModel)
-	if cmd == nil || !got.sendToWeRead || got.sendToKindle {
-		t.Fatalf("WeRead action not chosen: weread=%v kindle=%v", got.sendToWeRead, got.sendToKindle)
+	if cmd == nil || !got.sendToWeRead || got.sendToKindle || got.sendToBoox {
+		t.Fatalf("WeRead action not chosen: weread=%v kindle=%v boox=%v", got.sendToWeRead, got.sendToKindle, got.sendToBoox)
 	}
 }
 
@@ -88,7 +90,8 @@ func TestShellDownloadWeReadActionLogsInFirstAndReturns(t *testing.T) {
 	download.bookName = "Book"
 	m.open("download", download)
 
-	m, _ = shellStep(m, key("left"))
+	m, _ = shellStep(m, key("left")) // wraps from Back to Boox
+	m, _ = shellStep(m, key("left")) // another step lands on WeRead
 	m, cmd := shellStep(m, key("enter"))
 	if cmd == nil {
 		t.Fatal("WeRead action did not leave the completion page")

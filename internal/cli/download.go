@@ -270,6 +270,7 @@ type downloadModel struct {
 	completeAction int
 	sendToKindle   bool
 	sendToWeRead   bool
+	sendToBoox     bool
 	// completeMessage reports a delivery outcome on the completion page.
 	completeMessage string
 	completeTone    noticeTone
@@ -390,9 +391,10 @@ func (m downloadModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "enter":
 				m.sendToKindle = actions[m.completeAction] == actionSendToKindle
 				m.sendToWeRead = actions[m.completeAction] == actionSendToWeRead
+				m.sendToBoox = actions[m.completeAction] == actionSendToBoox
 				return m, tea.Quit
 			case "esc", "q", "ctrl+c":
-				m.sendToKindle, m.sendToWeRead = false, false
+				m.sendToKindle, m.sendToWeRead, m.sendToBoox = false, false, false
 				return m, tea.Quit
 			case "left", "shift+tab":
 				m.completeAction = (m.completeAction + len(actions) - 1) % len(actions)
@@ -476,6 +478,7 @@ const (
 	actionBack         = "Back"
 	actionSendToKindle = "Send to Kindle"
 	actionSendToWeRead = "Send to WeRead"
+	actionSendToBoox   = "Send to Boox"
 )
 
 func (m downloadModel) canSendToKindle() bool {
@@ -491,6 +494,7 @@ func (m downloadModel) completeActions() []string {
 	if weread.SupportedFormat(m.savedPath) {
 		actions = append(actions, actionSendToWeRead)
 	}
+	actions = append(actions, actionSendToBoox)
 	return actions
 }
 

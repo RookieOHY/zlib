@@ -343,9 +343,8 @@ func TestShellDownloadKindleRejectsUnsupportedFile(t *testing.T) {
 	if strings.Contains(ansi.Strip(m.View().Content), "Send to Kindle") {
 		t.Fatal("unsupported file still offers Kindle delivery")
 	}
-	m, _ = shellStep(m, key("right"))
-	if m.page.(downloadModel).completeAction != 0 {
-		t.Fatal("unsupported file has a selectable Kindle action")
+	if got := m.page.(downloadModel).completeActions(); !slices.Equal(got, []string{actionBack, actionSendToBoox}) {
+		t.Fatalf("fb2 actions = %v, want Back and Boox only", got)
 	}
 	m, cmd := shellStep(m, key("enter"))
 	m, _ = shellStep(m, cmd())

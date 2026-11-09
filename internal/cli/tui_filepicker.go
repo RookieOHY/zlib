@@ -38,7 +38,18 @@ var (
 		allowed:      weread.ImportFormats,
 		check:        wereadCheckFile,
 	}
+	booxTarget = sendTarget{
+		title:        "Send to Boox",
+		confirmTitle: "Send to Boox?",
+		note:         "Upload this file to your Boox device via BooxDrop.",
+		action:       "Send",
+		unsupported:  "Unsupported file type. Choose an EPUB, PDF, MOBI, AZW3, TXT, DOCX, FB2, DJVU, CBZ or CBR file.",
+		allowed:      booxAllowedTypes,
+	}
 )
+
+// booxAllowedTypes lists the document formats BooxDrop accepts.
+var booxAllowedTypes = []string{".epub", ".pdf", ".mobi", ".azw", ".azw3", ".pdb", ".prc", ".fb2", ".fbz", ".txt", ".rtf", ".doc", ".docx", ".odt", ".html", ".htm", ".xhtml", ".chm", ".djvu", ".caj", ".cbr", ".cbz"}
 
 // sendFileModel picks a local file to send to target. Only folders and
 // files the target accepts are listed.
@@ -54,6 +65,8 @@ type sendFileModel struct {
 func newKindleFileModel(dir string) sendFileModel { return newSendFileModel(dir, kindleTarget) }
 
 func newWeReadFileModel(dir string) sendFileModel { return newSendFileModel(dir, wereadTarget) }
+
+func newBooxFileModel(dir string) sendFileModel { return newSendFileModel(dir, booxTarget) }
 
 func newSendFileModel(dir string, target sendTarget) sendFileModel {
 	input := textinput.New()

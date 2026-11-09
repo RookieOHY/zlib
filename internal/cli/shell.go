@@ -55,6 +55,7 @@ type shellModel struct {
 	// delivery returns to.
 	deliveryReturn  *downloadModel
 	kindlePath      string
+	booxPath        string
 	wereadPath      string // file waiting for WeRead import, kept across login
 	loginForm       *inlineForm
 	loginCancel     context.CancelFunc
@@ -109,6 +110,7 @@ var shellCommands = []shellCommand{
 	{"logout", "Delete the saved session"},
 	{"kindle", "Send a file to Kindle"},
 	{"weread", "Import a file into WeRead"},
+	{"boox", "Send a file to a Boox e-reader"},
 	{"quit", "Exit zlib"},
 }
 
@@ -649,6 +651,8 @@ func (m *shellModel) dispatch(value string) tea.Cmd {
 		return m.openKindle(arg)
 	case "weread":
 		return m.openWeRead(arg)
+	case "boox":
+		return m.openBoox(arg)
 	}
 	c, err := loadClient()
 	if err != nil {
@@ -768,6 +772,12 @@ func (m *shellModel) completed() tea.Cmd {
 			}
 			m.wereadPath = page.savedPath
 			return m.open("weread-confirm", confirm)
+		} else if page.sendToBoox {
+			page.sendToBoox = false
+			page.completeAction = 0
+			m.deliveryReturn = new(page)
+			m.booxPath = page.savedPath
+			return m.open("boox-confirm", shellConfirm{title: "Send to Boox?", detail: filepath.Base(page.savedPath), action: "Send"})
 		} else {
 			m.deliveryReturn = nil
 			m.restore()
@@ -781,6 +791,8 @@ func (m *shellModel) completed() tea.Cmd {
 		if m.deliveryReturn != nil {
 			if m.kind == "weread-error" {
 				return m.returnToDownloadCompletion(noticeError, "WeRead import failed")
+			} else if m.kind == "boox-error" {
+				return m.returnToDownloadCompletion(noticeError, "Boox send failed")
 			}
 			return m.returnToDownloadCompletion(noticeError, "Kindle send failed")
 		}
@@ -819,6 +831,8 @@ func (m *shellModel) completed() tea.Cmd {
 			return tea.Batch(m.spinner.Tick, shellCmd(m.generation, func() tea.Msg { return shellLogin(ctx, fields) }))
 		case "kindle-config":
 			return m.saveKindle(page.fields)
+		case "boox-config":
+			return m.saveBoox(page.fields)
 		case "kindle-password":
 			if err := saveKindleSMTPPassword(page.fields[0].value); err != nil {
 				page.accepted = false
@@ -833,6 +847,8 @@ func (m *shellModel) completed() tea.Cmd {
 		if page.accepted {
 			if m.kind == "weread-file" {
 				return m.importWeRead(page.path)
+			} else if m.kind == "boox-file" {
+				return m.sendBoox(page.path)
 			}
 			return m.sendKindle(page.path)
 		}
@@ -849,6 +865,21 @@ func (m *shellModel) completed() tea.Cmd {
 		} else {
 			path, _ := filepath.Abs(page.filePath)
 			m.openInfo("Email sent to Kindle", "File\n"+bookCell(path)+"\n\nTo\n"+bookCell(page.cfg.To))
+		}
+		return nil
+	case booxSendModel:
+		if page.err != nil {
+			m.commandErr = page.err
+			return m.open("boox-error", shellErrorModel{title: "Boox send failed", subtitle: bookCell(page.filePath), detail: page.err.Error()})
+		} else if m.deliveryReturn != nil {
+			return m.returnToDownloadCompletion(noticeSuccess, "Sent to Boox")
+		} else {
+			path, _ := filepath.Abs(page.filePath)
+			mode := "the Books folder"
+			if page.cfg.Library {
+				mode = "the device library"
+			}
+			m.openInfo("Sent to Boox", "File\n"+bookCell(path)+"\n\nDevice\n"+bookCell(page.cfg.IP)+"\n\nLanded in\n"+bookCell(mode))
 		}
 		return nil
 	case shellConfirm:
@@ -869,13 +900,15 @@ func (m *shellModel) completed() tea.Cmd {
 				return m.dispatch("/login")
 			case "kindle-confirm":
 				return m.sendKindle(m.kindlePath)
+			case "boox-confirm":
+				return m.sendBoox(m.booxPath)
 			case "weread-confirm":
 				return m.importWeRead(m.wereadPath)
 			case "weread-logout":
 				return m.logoutWeRead()
 			}
 		}
-		if (m.kind == "kindle-confirm" || m.kind == "weread-confirm") && m.deliveryReturn != nil {
+		if (m.kind == "kindle-confirm" || m.kind == "weread-confirm" || m.kind == "boox-confirm") && m.deliveryReturn != nil {
 			return m.returnToDownloadCompletion(noticeInfo, "")
 		}
 	}
