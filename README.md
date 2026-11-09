@@ -39,25 +39,17 @@ English | [简体中文](README.zh.md)
 
 ## Install
 
-macOS / Linux with Homebrew:
-
-```bash
-brew install heartleo/tap/zlib
-```
+> A personal fork of [heartleo/zlib](https://github.com/heartleo/zlib) adding **Send to Boox**.
+> The Homebrew tap and winget packages below belong to upstream; use the install script or
+> the [Releases](https://github.com/RookieOHY/zlib/releases) page for this fork.
 
 macOS / Linux with the install script (installs to `/usr/local/bin`, may ask for `sudo`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/heartleo/zlib/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/RookieOHY/zlib/main/install.sh | sh
 ```
 
-Windows with winget:
-
-```powershell
-winget install --id heartleo.zlib --exact
-```
-
-Or download a binary from [Releases](https://github.com/heartleo/zlib/releases/latest)
+Or download a binary from [Releases](https://github.com/RookieOHY/zlib/releases/latest)
 and put it on your `PATH`. See [Installation](docs/installation.md) for Go
 installation, source builds, and upgrades.
 

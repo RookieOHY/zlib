@@ -39,26 +39,17 @@ Z-Library 命令行工具，你和 AI Agent 都能用。
 
 ## 安装
 
-macOS / Linux，使用 Homebrew：
-
-```bash
-brew install heartleo/tap/zlib
-```
+> 本仓库是 [heartleo/zlib](https://github.com/heartleo/zlib) 的个人 fork，新增了**发送到文石**功能。
+> 下文的 Homebrew tap 和 winget 包属于上游；本 fork 请使用安装脚本或 [Releases](https://github.com/RookieOHY/zlib/releases) 页面下载。
 
 macOS / Linux，使用安装脚本（安装到 `/usr/local/bin`，可能需要 `sudo`）：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/heartleo/zlib/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/RookieOHY/zlib/main/install.sh | sh
 ```
 
-Windows，使用 winget：
-
-```powershell
-winget install --id heartleo.zlib --exact
-```
-
-也可以从 [Releases](https://github.com/heartleo/zlib/releases/latest) 下载程序，
-放入 `PATH` 目录。Go 安装、源码编译和更新方式见[安装指南](docs/installation.md)。
+也可以从 [Releases](https://github.com/RookieOHY/zlib/releases/latest) 下载二进制后放到 `PATH`。
+基于源码编译、升级等更多方式见 [Installation](docs/installation.md)。
 
 ## 快速开始
 

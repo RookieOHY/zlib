@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-REPO="heartleo/zlib"
+REPO="RookieOHY/zlib"
 BIN="zlib"
 INSTALL_DIR="/usr/local/bin"
 
@@ -21,8 +21,8 @@ case "$ARCH" in
   *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;;
 esac
 
-# Get latest version
-VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed 's/.*"tag_name": *"\(.*\)".*/\1/')
+# Get latest version (includes pre-releases, excludes drafts)
+VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases?per_page=1" | grep '"tag_name"' | head -1 | sed 's/.*"tag_name": *"\(.*\)".*/\1/')
 if [ -z "$VERSION" ]; then
   echo "Failed to fetch latest version" >&2
   exit 1
